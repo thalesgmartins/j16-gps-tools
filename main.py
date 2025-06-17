@@ -1,22 +1,36 @@
-# main.py
-#   Exemplo de uso da biblioteca para enviar comandos AT para um rastreador J16, printando respostas na Serial.
 
-from j16tracker import SerialInterface, J16Commands
+"""
+main.py
 
-SERIAL_PORT = "/dev/ttyUSB2"
+Função principal do código: 
+- Usa a lib argparse para receber parâmetros;
+- Permite rodar em modo CLI ou GUI (GUI por padrão);
+- Usa TKinter para construir a GUI.
+"""
 
-def main():
+import argparse
 
-    serial = SerialInterface(SERIAL_PORT)
+def run_cli():
+    # TODO: Modo CLI não implementado ainda.
+    print("Modo CLI ainda não implementado.")
 
-    try:
-        serial.send_command(J16Commands.get_imei())
+def run_gui():
+    # Importa a lib customizada
+    from gui import J16GUI
 
-        resposta = serial.read_response()
-        print("Resposta dos rastreador: ", resposta)
-    finally:
-        serial.close()
+    # Faz a instância do app e chama o loop do programa.
+    app = J16GUI()
+    app.mainloop()
 
+if __name__ == "__main__":
 
-if __name__ == '__main__':
-    main()
+    # Configurando os argumetnos esperados
+    parser = argparse.ArgumentParser(description="J16 GPS-Tools - Ferramenta de comunicação com rastreador J16")
+    parser.add_argument("--mode", choices=["cli", "gui"], default="gui", help="Modo de execução")
+    args = parser.parse_args()
+
+    # Executando o programa de acordo com o argumento passado.
+    if args.mode == "gui":
+        run_gui()
+    else:
+        run_cli()

@@ -6,8 +6,10 @@ from .config import SERIAL_CONFIG
 #   - Faz a leitura e tratamento dos dados.
 #   - Envia os comandos para o Rastreador.
 class SerialInterface:
-    def __init__(self, port: str, baudrate: int = SERIAL_CONFIG["baudrate"]):
-        self.ser = serial.Serial(port, baudrate, timeout=SERIAL_CONFIG["timeout"])
+    def __init__(self, port: str, baudrate: int = SERIAL_CONFIG["baudrate"], timeout: int = SERIAL_CONFIG["timeout"]):
+        self._connected = None
+        self.ser = serial.Serial(port=port, baudrate=baudrate, timeout=timeout)
+        self._connected = True
         print(f"[INFO] Conectado à porta {port} @ {baudrate}bps")
 
     def send_command(self, command: str):
@@ -23,4 +25,5 @@ class SerialInterface:
 
     def close(self):
         self.ser.close()
+        self._connected = False
         print("[INFO] Porta serial fechada")
